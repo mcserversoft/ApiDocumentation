@@ -39,7 +39,9 @@ tags:
   - name: Backups
     description: API calls that involve backup from a single server.
   - name: Users
-    description: API calls that involve the web panel users. (API Key must have admin rights)
+    description: |-
+      API calls that involve the web panel users.  
+      (API Key must have admin rights)
 paths:
   /api/v2:
     get:
@@ -211,10 +213,17 @@ paths:
         - Servers
       summary: Mass execute server action
       description: |-
-        Run a server command on a specific server.
+        Change the status of multiple servers.
 
-        **command (required) : string**  
-        Server console command that should be executed.
+        **action : enum**  
+        0 = InvalidOrEmpty  
+        1 = Stop  
+        2 = Start  
+        3 = Kill  
+        4 = Restart
+
+        **serverIds (required) : string\[\]**  
+        List of serverIds where the command should execute.
       requestBody:
         content:
           application/json:
@@ -274,10 +283,13 @@ paths:
         - Servers
       summary: Mass execute server command
       description: |-
-        Run a server command on a specific server.
+        Run a server command on a multiple server.
 
         **command (required) : string**  
         Server console command that should be executed.
+
+        **serverIds (required) : string\[\]**  
+        List of serverIds where the command should execute.
       requestBody:
         content:
           application/json:
@@ -337,10 +349,13 @@ paths:
         - Servers
       summary: Mass execute server commands
       description: |-
-        Run a server command on a specific server.
+        Run multiple server commands on a multiple server.
 
-        **command (required) : string**  
-        Server console command that should be executed.
+        **commands (required) : string\[\]**  
+        List of server console commands that should be executed.
+
+        **serverIds (required) : string\[\]**  
+        List of serverIds where the command should execute.
       requestBody:
         content:
           application/json:
@@ -1630,6 +1645,9 @@ paths:
       tags:
         - Users
       summary: Get list of users
+      description: |-
+        Return all users from a specific server.  
+        (API Key must have admin rights)
       responses:
         "200":
           description: OK
@@ -1643,7 +1661,7 @@ paths:
                   enabled: true
                   isAdmin: true
                   hasAccessToAllServers: true
-                  customServerPermissionCatalog: {}
+                  customServerPermissions: {}
                   createdAt: "2022-07-04T18:18:22.9365915Z"
                   lastModifiedAt: "2022-12-19T20:50:55.53183Z"
                 - userId: fba6ab9d-9c19-4d0c-8d0d-3d27adc832e1
@@ -1651,7 +1669,7 @@ paths:
                   enabled: true
                   isAdmin: false
                   hasAccessToAllServers: false
-                  customServerPermissionCatalog:
+                  customServerPermissions:
                     69361e31-2ac8-43b5-9377-0cb5e40e75ac:
                       viewStats: false
                       viewConsole: false
@@ -1693,23 +1711,35 @@ paths:
         - Users
       summary: Create User
       description: |-
-        Create a new backup.
+        Create a new user.  
+        (API Key must have admin rights)
 
-        **backup (required)**  
-        \- name (required) : string  
-        \- destination (required) : string  
-        \- suspend(optional) : boolean  
-        \- deleteOldBackups (optional) : boolean  
-        \- compression (optional) : object  
-        \- runBackupAfterCreation (optional): boolean  
-        \- fileBlacklist (optional) : string\[\]  
-        \- folderBlacklist (optional) : string\[\]
+        **user (required)**  
+        \- username (required) : string  
+        \- password (required) : string  
+        \- passwordRepeat (required) : boolean  
+        \- enabled (optional) : boolean  
+        \- isAdmin (optional) : boolean  
+        \- hasAccessToAllServers (optional): boolean  
+        \- customServerPermissions (optional) : object\[\]
 
-        ### **C**ompression **Object**
+        ### **CustomServerPermissions Object**
 
-        \- high (default)  
-        \- low  
-        \- none
+        userId (required) : string {  
+        viewStats (required) : boolean,  
+        viewConsole (required) : boolean,  
+        useConsole (required) : boolean,  
+        useServerActions (required) : boolean  
+        }
+
+        **example**
+
+        _"3054aac3-dbf5-4e10-94d2-f4b83577d9b4": {  
+        "viewStats": true,  
+        "viewConsole": true,  
+        "useConsole": true,  
+        "useServerActions": true  
+        }_
       requestBody:
         content:
           application/json:
@@ -1722,7 +1752,7 @@ paths:
                 enabled: true
                 isAdmin: false
                 hasAccessToAllServers: true
-                customServerPermissionCatalog: null
+                customServerPermissions: null
       responses:
         "201":
           description: Created
@@ -1760,6 +1790,9 @@ paths:
       tags:
         - Users
       summary: Get list of user details
+      description: |-
+        Return a specific user.  
+        (API Key must have admin rights)
       responses:
         "200":
           description: OK
@@ -1773,7 +1806,7 @@ paths:
                 enabled: true
                 isAdmin: false
                 hasAccessToAllServers: true
-                customServerPermissionCatalog:
+                customServerPermissions:
                   3054aac3-dbf5-4e10-94d2-f4b83577d9b4:
                     viewStats: true
                     viewConsole: true
@@ -1811,6 +1844,35 @@ paths:
       tags:
         - Users
       summary: Edit user
+      description: |-
+        Update a specific user.  
+        (API Key must have admin rights)
+
+        **user (required)**  
+        \- password (optional) : string  
+        \- passwordRepeat (optional) : boolean  
+        \- enabled (optional) : boolean  
+        \- isAdmin (optional) : boolean  
+        \- hasAccessToAllServers (optional): boolean  
+        \- customServerPermissions (optional) : object\[\]
+
+        ### **CustomServerPermissions Object**
+
+        userId (required) : string {  
+        viewStats (required) : boolean,  
+        viewConsole (required) : boolean,  
+        useConsole (required) : boolean,  
+        useServerActions (required) : boolean  
+        }
+
+        **example**
+
+        _"3054aac3-dbf5-4e10-94d2-f4b83577d9b4": {  
+        "viewStats": true,  
+        "viewConsole": true,  
+        "useConsole": true,  
+        "useServerActions": true  
+        }_
       requestBody:
         content:
           application/json:
@@ -1820,7 +1882,7 @@ paths:
                 password: aOfnfydBSBR8%ZgIfy%he$pvm
                 passwordRepeat: aOfnfydBSBR8%ZgIfy%he$pvm
                 hasAccessToAllServers: true
-                customServerPermissionCatalog: null
+                customServerPermissions: null
       responses:
         "200":
           description: OK
@@ -1861,7 +1923,9 @@ paths:
       tags:
         - Users
       summary: Delete user
-      description: Delete a specific server backup.
+      description: |-
+        Delete a specific server user, any active sessions are also removed.  
+        (API Key must have admin rights)
       responses:
         "200":
           description: Deleted
@@ -1896,6 +1960,9 @@ paths:
       tags:
         - Users
       summary: Wipe all sessions
+      description: |-
+        Wipes any panel sessions, meaning all users need to relogin.  
+        (API Key must have admin rights)
       requestBody:
         content: {}
       responses:
