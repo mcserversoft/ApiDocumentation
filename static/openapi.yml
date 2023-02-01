@@ -2,14 +2,22 @@ openapi: 3.0.0
 info:
   title: MCSS API v13
   description: >-
-    Documentation for the official MC Server Soft API.
+    Documentation for the official MC Server Soft API.  
+
+    This for MCSS v13.5.0 and higher.
 
 
-    This for MCSS v13 and higher.  
+    Other versions:
 
-    The API used in V12 can be found at
+
+    - The API used in v13 - v13.4 can be found at
+    [https://apidocs-v1.mcserversoft.com](https://apidocs-v1.mcserversoft.comNote)  
+        Note that v1 is still included in the latest version of mcss, but it's recommended that you use or migrate to v2.
+        
+
+    - The API used in V12 can be found at
     [https://documenter.getpostman.com/view/7749159/TzJsexSC](https://documenter.getpostman.com/view/7749159/TzJsexSC)
-
+        
 
     `Enabling SSL is recommended even when the certificate is self signed!`
   version: API_2.0.0
@@ -1723,7 +1731,7 @@ paths:
         \- hasAccessToAllServers (optional): boolean  
         \- customServerPermissions (optional) : object\[\]
 
-        ### **CustomServerPermissions Object**
+        ### CustomServerPermissions Object
 
         userId (required) : string {  
         viewStats (required) : boolean,  
@@ -1856,7 +1864,7 @@ paths:
         \- hasAccessToAllServers (optional): boolean  
         \- customServerPermissions (optional) : object\[\]
 
-        ### **CustomServerPermissions Object**
+        ### CustomServerPermissions Object
 
         userId (required) : string {  
         viewStats (required) : boolean,  
