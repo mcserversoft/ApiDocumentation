@@ -21,6 +21,8 @@ components:
     apikeyAuth:
       type: http
       scheme: apikey
+      in: header
+      name: apiKey
 security:
   - apikeyAuth: []
 tags:
