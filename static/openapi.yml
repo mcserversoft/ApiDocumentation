@@ -103,7 +103,7 @@ paths:
               schema:
                 type: object
               example:
-                - guid: 69361e31-2ac8-43b5-9377-0cb5e40e75ac
+                - serverId: 69361e31-2ac8-43b5-9377-0cb5e40e75ac
                   status: 0
                   name: Server Pool
                   description: Your Minecraft, your way
@@ -116,7 +116,7 @@ paths:
                   keepOnline: 0
                   javaAllocatedMemory: 1024
                   javaStartupLine: java -Xms256M -Xmx[RAM]M -jar [SERVERTYPE.NAME].jar
-                - guid: bd03d993-e052-4196-bf04-bdc3754efc3d
+                - serverId: bd03d993-e052-4196-bf04-bdc3754efc3d
                   status: 0
                   name: My Bungee Network
                   description: Jump jump
@@ -446,7 +446,7 @@ paths:
               schema:
                 type: object
               example:
-                guid: e0ae4902-10ed-481f-aed0-fa1170ec779a
+                serverId: e0ae4902-10ed-481f-aed0-fa1170ec779a
                 status: 0
                 name: Server Pool
                 description: Pvp & Minigames
@@ -486,7 +486,7 @@ paths:
                 type: string
               example: null
         "404":
-          description: Unknown Guid
+          description: Unknown Server
           content:
             text/plain:
               schema:
@@ -543,7 +543,7 @@ paths:
                 type: string
               example: null
         "404":
-          description: Unknown Guid
+          description: Unknown Server
           content:
             text/plain:
               schema:
@@ -585,7 +585,7 @@ paths:
                 type: string
               example: null
         "404":
-          description: Unknown Guid
+          description: Unknown Server
           content:
             text/plain:
               schema:
@@ -620,7 +620,7 @@ paths:
                 type: string
               example: null
         "404":
-          description: Unknown Guid
+          description: Unknown Server
           content:
             text/plain:
               schema:
@@ -670,7 +670,7 @@ paths:
                 type: string
               example: null
         "404":
-          description: Unknown Guid
+          description: Unknown Server
           content:
             text/plain:
               schema:
@@ -716,7 +716,7 @@ paths:
                 type: string
               example: null
         "404":
-          description: Unknown Guid
+          description: Unknown Server
           content:
             text/plain:
               schema:
@@ -765,7 +765,7 @@ paths:
                 type: string
               example: null
         "404":
-          description: Unknown Guid
+          description: Unknown Server
           content:
             text/plain:
               schema:
@@ -843,7 +843,7 @@ paths:
                 type: string
               example: null
         "404":
-          description: Unknown Guid
+          description: Unknown Server
           content:
             text/plain:
               schema:
@@ -902,7 +902,7 @@ paths:
                 type: string
               example: null
         "404":
-          description: Unknown Guid
+          description: Unknown Server
           content:
             text/plain:
               schema:
@@ -941,7 +941,7 @@ paths:
                 type: string
               example: null
         "404":
-          description: Unknown Guid
+          description: Unknown Server
           content:
             text/plain:
               schema:
@@ -974,8 +974,8 @@ paths:
               schema:
                 type: object
               example:
-                - taskId: a3e0fc6b-1965-4745-a527-090c83b22079
-                  guidOfServer: e0ae4902-10ed-481f-aed0-fa1170ec779a
+                - serverId: e0ae4902-10ed-481f-aed0-fa1170ec779a
+                  taskId: a3e0fc6b-1965-4745-a527-090c83b22079
                   name: 1min restart announcement
                   enabled: false
                   playerRequirement: 0
@@ -985,8 +985,8 @@ paths:
                   job:
                     commands:
                       - say Restarting in 1min.
-                - taskId: 8fcab652-cb96-4c57-b12b-f1d0db694a2b
-                  guidOfServer: e0ae4902-10ed-481f-aed0-fa1170ec779a
+                - serverId: e0ae4902-10ed-481f-aed0-fa1170ec779a
+                  taskId: 8fcab652-cb96-4c57-b12b-f1d0db694a2b
                   name: Timeless
                   enabled: true
                   playerRequirement: 0
@@ -1008,7 +1008,7 @@ paths:
                 type: string
               example: null
         "404":
-          description: Unknown Guid
+          description: Unknown Server
           content:
             text/plain:
               schema:
@@ -1106,7 +1106,7 @@ paths:
                 type: string
               example: null
         "404":
-          description: Unknown Guid
+          description: Unknown Server
           content:
             text/plain:
               schema:
@@ -1127,7 +1127,6 @@ paths:
                 type: object
               example:
                 taskId: 4a582b48-5f37-4586-88f9-a37af96db08a
-                guidOfServer: e0ae4902-10ed-481f-aed0-fa1170ec779a
                 name: Made with the api2
                 enabled: false
                 playerRequirement: 0
@@ -1153,7 +1152,7 @@ paths:
                 type: string
               example: null
         "404":
-          description: Unknown Guid
+          description: Unknown Server/Task
           content:
             text/plain:
               schema:
@@ -1248,7 +1247,7 @@ paths:
                 type: string
               example: null
         "404":
-          description: Unknown Guid/Task
+          description: Unknown Server/Task
           content:
             text/plain:
               schema:
@@ -1290,7 +1289,7 @@ paths:
                 type: string
               example: null
         "404":
-          description: Unknown Task
+          description: Unknown Server/Task
           content:
             text/plain:
               schema:
@@ -1327,7 +1326,7 @@ paths:
                 type: string
               example: null
         "404":
-          description: Unknown Guid/Task
+          description: Unknown Server/Task
           content:
             text/plain:
               schema:
@@ -1377,7 +1376,7 @@ paths:
                 type: string
               example: null
         "404":
-          description: Unknown Guid
+          description: Unknown Server
           content:
             text/plain:
               schema:
@@ -1449,7 +1448,7 @@ paths:
                 type: string
               example: null
         "404":
-          description: Unknown Guid
+          description: Unknown Server
           content:
             text/plain:
               schema:
@@ -1509,7 +1508,7 @@ paths:
                 type: string
               example: null
         "404":
-          description: Unknown Guid
+          description: Unknown Server/Backup
           content:
             text/plain:
               schema:
@@ -1572,7 +1571,7 @@ paths:
                 type: string
               example: null
         "404":
-          description: Unknown Guid/Backup
+          description: Unknown Server/Backup
           content:
             text/plain:
               schema:
@@ -1606,7 +1605,7 @@ paths:
                 type: string
               example: null
         "404":
-          description: Unknown Backup
+          description: Unknown Server/Backup
           content:
             text/plain:
               schema:
@@ -1642,7 +1641,7 @@ paths:
                 type: string
               example: null
         "404":
-          description: Unknown Guid/Backup
+          description: Unknown Server/Backup
           content:
             text/plain:
               schema:
