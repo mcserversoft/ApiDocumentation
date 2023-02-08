@@ -1724,7 +1724,7 @@ paths:
         **user (required)**  
         \- username (required) : string  
         \- password (required) : string  
-        \- passwordRepeat (required) : boolean  
+        \- passwordRepeat (required) : string  
         \- enabled (optional) : boolean  
         \- isAdmin (optional) : boolean  
         \- hasAccessToAllServers (optional): boolean  
@@ -1857,7 +1857,7 @@ paths:
 
         **user (required)**  
         \- password (optional) : string  
-        \- passwordRepeat (optional) : boolean  
+        \- passwordRepeat (optional) : string  
         \- enabled (optional) : boolean  
         \- isAdmin (optional) : boolean  
         \- hasAccessToAllServers (optional): boolean  
