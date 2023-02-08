@@ -2,17 +2,25 @@ openapi: 3.0.0
 info:
   title: MCSS API v13
   description: >-
-    Documentation for the official MC Server Soft API.
+    Documentation for the official MC Server Soft API.  
+
+    This for MCSS v13.5.0 and higher.
 
 
-    This for MCSS v13 and higher.  
+    Other versions:
 
-    The API used in V12 can be found at
+
+    - The API used in v13 - v13.4 can be found at
+    [https://apidocs-v1.mcserversoft.com](https://apidocs-v1.mcserversoft.comNote)  
+        Note that v1 is still included in the latest version of mcss, but it's recommended that you use or migrate to v2.
+        
+
+    - The API used in V12 can be found at
     [https://documenter.getpostman.com/view/7749159/TzJsexSC](https://documenter.getpostman.com/view/7749159/TzJsexSC)
-
+        
 
     `Enabling SSL is recommended even when the certificate is self signed!`
-  version: API_1.2.1
+  version: API_2.0.0
 servers:
   - url: https://localhost:25560
     description: Your local MCSS API server
@@ -21,6 +29,8 @@ components:
     apikeyAuth:
       type: http
       scheme: apikey
+      in: header
+      name: apiKey
 security:
   - apikeyAuth: []
 tags:
@@ -36,8 +46,12 @@ tags:
     description: API calls that involve the scheduler from a single server.
   - name: Backups
     description: API calls that involve backup from a single server.
+  - name: Users
+    description: |-
+      API calls that involve the web panel users.  
+      (API Key must have admin rights)
 paths:
-  /api/v1:
+  /api/v2:
     get:
       tags:
         - General
@@ -63,7 +77,7 @@ paths:
               schema:
                 type: string
               example: null
-  /api/v1/servers:
+  /api/v2/servers:
     get:
       tags:
         - Servers
@@ -89,7 +103,7 @@ paths:
               schema:
                 type: object
               example:
-                - guid: 69361e31-2ac8-43b5-9377-0cb5e40e75ac
+                - serverId: 69361e31-2ac8-43b5-9377-0cb5e40e75ac
                   status: 0
                   name: Server Pool
                   description: Your Minecraft, your way
@@ -102,7 +116,7 @@ paths:
                   keepOnline: 0
                   javaAllocatedMemory: 1024
                   javaStartupLine: java -Xms256M -Xmx[RAM]M -jar [SERVERTYPE.NAME].jar
-                - guid: bd03d993-e052-4196-bf04-bdc3754efc3d
+                - serverId: bd03d993-e052-4196-bf04-bdc3754efc3d
                   status: 0
                   name: My Bungee Network
                   description: Jump jump
@@ -151,7 +165,7 @@ paths:
                   keepOnline: 0
                   javaAllocatedMemory: 2048
                   javaStartupLine: java -Xms256M -Xmx[RAM]M -jar [SERVERTYPE.NAME].jar
-  /api/v1/servers/count:
+  /api/v2/servers/count:
     get:
       tags:
         - Servers
@@ -201,7 +215,212 @@ paths:
               schema:
                 type: string
               example: null
-  /api/v1/servers/e0ae4902-10ed-481f-aed0-fa1170ec779a:
+  /api/v2/servers/execute/action:
+    post:
+      tags:
+        - Servers
+      summary: Mass execute server action
+      description: |-
+        Change the status of multiple servers.
+
+        **action : enum**  
+        0 = InvalidOrEmpty  
+        1 = Stop  
+        2 = Start  
+        3 = Kill  
+        4 = Restart
+
+        **serverIds (required) : string\[\]**  
+        List of serverIds where the command should execute.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                serverIds:
+                  - 69361e31-2ac8-43b5-9377-0cb5e40e75ac
+                  - 19f7b040-cc2d-4b61-bf32-334b4eb091f9
+                action: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+        '207':
+          description: Multi-Status
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                responses:
+                  - serverId: 69361e31-2ac8-43b5-9377-0cb5e40e75ac
+                    status: 200
+                    message: OK
+                  - serverId: 19f7b040-cc2d-4b61-bf32-334b4eb091f9
+                    status: 403
+                    message: No Server Access
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+        '403':
+          description: No Server Access
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+        '404':
+          description: Unknown Server
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+  /api/v2/servers/execute/command:
+    post:
+      tags:
+        - Servers
+      summary: Mass execute server command
+      description: |-
+        Run a server command on a multiple server.
+
+        **command (required) : string**  
+        Server console command that should be executed.
+
+        **serverIds (required) : string\[\]**  
+        List of serverIds where the command should execute.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                serverIds:
+                  - 69361e31-2ac8-43b5-9377-0cb5e40e75ac
+                  - 19f7b040-cc2d-4b61-bf32-334b4eb091f9
+                command: say hi
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+        '207':
+          description: Multi-Status
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                responses:
+                  - serverId: 69361e31-2ac8-43b5-9377-0cb5e40e75ac
+                    status: 200
+                    message: OK
+                  - serverId: 19f7b040-cc2d-4b61-bf32-334b4eb091f9
+                    status: 403
+                    message: No Server Access
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+        '403':
+          description: No Server Access
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+        '404':
+          description: Unknown Server
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+  /api/v2/servers/execute/commands:
+    post:
+      tags:
+        - Servers
+      summary: Mass execute server commands
+      description: |-
+        Run multiple server commands on a multiple server.
+
+        **commands (required) : string\[\]**  
+        List of server console commands that should be executed.
+
+        **serverIds (required) : string\[\]**  
+        List of serverIds where the command should execute.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                serverIds:
+                  - 69361e31-2ac8-43b5-9377-0cb5e40e75ac
+                  - 19f7b040-cc2d-4b61-bf32-334b4eb091f9
+                commands:
+                  - say Je suis mcss
+                  - say Qui
+                  - say C'est moi
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+        '207':
+          description: Multi-Status
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                responses:
+                  - serverId: 69361e31-2ac8-43b5-9377-0cb5e40e75ac
+                    status: 200
+                    message: OK
+                  - serverId: 19f7b040-cc2d-4b61-bf32-334b4eb091f9
+                    status: 403
+                    message: No Server Access
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+        '403':
+          description: No Server Access
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+        '404':
+          description: Unknown Server
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+  /api/v2/servers/e0ae4902-10ed-481f-aed0-fa1170ec779a:
     get:
       tags:
         - Server
@@ -227,7 +446,7 @@ paths:
               schema:
                 type: object
               example:
-                guid: e0ae4902-10ed-481f-aed0-fa1170ec779a
+                serverId: e0ae4902-10ed-481f-aed0-fa1170ec779a
                 status: 0
                 name: Server Pool
                 description: Pvp & Minigames
@@ -267,13 +486,13 @@ paths:
                 type: string
               example: null
         '404':
-          description: Unknown Guid
+          description: Unknown Server
           content:
             text/plain:
               schema:
                 type: string
               example: null
-  /api/v1/servers/69361e31-2ac8-43b5-9377-0cb5e40e75ac:
+  /api/v2/servers/69361e31-2ac8-43b5-9377-0cb5e40e75ac:
     put:
       tags:
         - Server
@@ -324,13 +543,13 @@ paths:
                 type: string
               example: null
         '404':
-          description: Unknown Guid
+          description: Unknown Server
           content:
             text/plain:
               schema:
                 type: string
               example: null
-  /api/v1/servers/e0ae4902-10ed-481f-aed0-fa1170ec779a/stats:
+  /api/v2/servers/e0ae4902-10ed-481f-aed0-fa1170ec779a/stats:
     get:
       tags:
         - Server
@@ -366,13 +585,13 @@ paths:
                 type: string
               example: null
         '404':
-          description: Unknown Guid
+          description: Unknown Server
           content:
             text/plain:
               schema:
                 type: string
               example: null
-  /api/v1/servers/3054aac3-dbf5-4e10-94d2-f4b83577d9b4/icon:
+  /api/v2/servers/3054aac3-dbf5-4e10-94d2-f4b83577d9b4/icon:
     get:
       tags:
         - Server
@@ -401,13 +620,13 @@ paths:
                 type: string
               example: null
         '404':
-          description: Unknown Guid
+          description: Unknown Server
           content:
             text/plain:
               schema:
                 type: string
               example: null
-  /api/v1/servers/e0ae4902-10ed-481f-aed0-fa1170ec779a/execute/action:
+  /api/v2/servers/e0ae4902-10ed-481f-aed0-fa1170ec779a/execute/action:
     post:
       tags:
         - Server
@@ -451,13 +670,13 @@ paths:
                 type: string
               example: null
         '404':
-          description: Unknown Guid
+          description: Unknown Server
           content:
             text/plain:
               schema:
                 type: string
               example: null
-  /api/v1/servers/e0ae4902-10ed-481f-aed0-fa1170ec779a/execute/command:
+  /api/v2/servers/e0ae4902-10ed-481f-aed0-fa1170ec779a/execute/command:
     post:
       tags:
         - Server
@@ -497,13 +716,13 @@ paths:
                 type: string
               example: null
         '404':
-          description: Unknown Guid
+          description: Unknown Server
           content:
             text/plain:
               schema:
                 type: string
               example: null
-  /api/v1/servers/e0ae4902-10ed-481f-aed0-fa1170ec779a/execute/commands:
+  /api/v2/servers/e0ae4902-10ed-481f-aed0-fa1170ec779a/execute/commands:
     post:
       tags:
         - Server
@@ -546,13 +765,13 @@ paths:
                 type: string
               example: null
         '404':
-          description: Unknown Guid
+          description: Unknown Server
           content:
             text/plain:
               schema:
                 type: string
               example: null
-  /api/v1/servers/3054aac3-dbf5-4e10-94d2-f4b83577d9b4/console:
+  /api/v2/servers/3054aac3-dbf5-4e10-94d2-f4b83577d9b4/console:
     get:
       tags:
         - Console
@@ -624,13 +843,13 @@ paths:
                 type: string
               example: null
         '404':
-          description: Unknown Guid
+          description: Unknown Server
           content:
             text/plain:
               schema:
                 type: string
               example: null
-  /api/v1/servers/e0ae4902-10ed-481f-aed0-fa1170ec779a/console/outdated:
+  /api/v2/servers/e0ae4902-10ed-481f-aed0-fa1170ec779a/console/outdated:
     get:
       tags:
         - Console
@@ -683,13 +902,13 @@ paths:
                 type: string
               example: null
         '404':
-          description: Unknown Guid
+          description: Unknown Server
           content:
             text/plain:
               schema:
                 type: string
               example: null
-  /api/v1/servers/e0ae4902-10ed-481f-aed0-fa1170ec779a/scheduler:
+  /api/v2/servers/e0ae4902-10ed-481f-aed0-fa1170ec779a/scheduler:
     get:
       tags:
         - Scheduler
@@ -722,13 +941,13 @@ paths:
                 type: string
               example: null
         '404':
-          description: Unknown Guid
+          description: Unknown Server
           content:
             text/plain:
               schema:
                 type: string
               example: null
-  /api/v1/servers/e0ae4902-10ed-481f-aed0-fa1170ec779a/scheduler/tasks:
+  /api/v2/servers/e0ae4902-10ed-481f-aed0-fa1170ec779a/scheduler/tasks:
     get:
       tags:
         - Scheduler
@@ -755,8 +974,8 @@ paths:
               schema:
                 type: object
               example:
-                - taskId: a3e0fc6b-1965-4745-a527-090c83b22079
-                  guidOfServer: e0ae4902-10ed-481f-aed0-fa1170ec779a
+                - serverId: e0ae4902-10ed-481f-aed0-fa1170ec779a
+                  taskId: a3e0fc6b-1965-4745-a527-090c83b22079
                   name: 1min restart announcement
                   enabled: false
                   playerRequirement: 0
@@ -766,8 +985,8 @@ paths:
                   job:
                     commands:
                       - say Restarting in 1min.
-                - taskId: 8fcab652-cb96-4c57-b12b-f1d0db694a2b
-                  guidOfServer: e0ae4902-10ed-481f-aed0-fa1170ec779a
+                - serverId: e0ae4902-10ed-481f-aed0-fa1170ec779a
+                  taskId: 8fcab652-cb96-4c57-b12b-f1d0db694a2b
                   name: Timeless
                   enabled: true
                   playerRequirement: 0
@@ -789,7 +1008,7 @@ paths:
                 type: string
               example: null
         '404':
-          description: Unknown Guid
+          description: Unknown Server
           content:
             text/plain:
               schema:
@@ -887,13 +1106,13 @@ paths:
                 type: string
               example: null
         '404':
-          description: Unknown Guid
+          description: Unknown Server
           content:
             text/plain:
               schema:
                 type: string
               example: null
-  /api/v1/servers/e0ae4902-10ed-481f-aed0-fa1170ec779a/scheduler/tasks/4a582b48-5f37-4586-88f9-a37af96db08a:
+  /api/v2/servers/e0ae4902-10ed-481f-aed0-fa1170ec779a/scheduler/tasks/4a582b48-5f37-4586-88f9-a37af96db08a:
     get:
       tags:
         - Scheduler
@@ -908,7 +1127,6 @@ paths:
                 type: object
               example:
                 taskId: 4a582b48-5f37-4586-88f9-a37af96db08a
-                guidOfServer: e0ae4902-10ed-481f-aed0-fa1170ec779a
                 name: Made with the api2
                 enabled: false
                 playerRequirement: 0
@@ -934,13 +1152,13 @@ paths:
                 type: string
               example: null
         '404':
-          description: Unknown Guid
+          description: Unknown Server/Task
           content:
             text/plain:
               schema:
                 type: string
               example: null
-  /api/v1/servers/e0ae4902-10ed-481f-aed0-fa1170ec779a/scheduler/tasks/26d30ef2-4e17-4c66-941b-07858601a100:
+  /api/v2/servers/e0ae4902-10ed-481f-aed0-fa1170ec779a/scheduler/tasks/26d30ef2-4e17-4c66-941b-07858601a100:
     put:
       tags:
         - Scheduler
@@ -1029,7 +1247,7 @@ paths:
                 type: string
               example: null
         '404':
-          description: Unknown Guid/Task
+          description: Unknown Server/Task
           content:
             text/plain:
               schema:
@@ -1042,7 +1260,7 @@ paths:
               schema:
                 type: string
               example: null
-  /api/v1/servers/e0ae4902-10ed-481f-aed0-fa1170ec779a/scheduler/tasks/e9aa8fb2-303c-41ec-b3a0-cd9252a2e19f:
+  /api/v2/servers/e0ae4902-10ed-481f-aed0-fa1170ec779a/scheduler/tasks/e9aa8fb2-303c-41ec-b3a0-cd9252a2e19f:
     delete:
       tags:
         - Scheduler
@@ -1071,13 +1289,13 @@ paths:
                 type: string
               example: null
         '404':
-          description: Unknown Task
+          description: Unknown Server/Task
           content:
             text/plain:
               schema:
                 type: string
               example: null
-  /api/v1/servers/e0ae4902-10ed-481f-aed0-fa1170ec779a/scheduler/tasks/8fcab652-cb96-4c57-b12b-f1d0db694a2b:
+  /api/v2/servers/e0ae4902-10ed-481f-aed0-fa1170ec779a/scheduler/tasks/8fcab652-cb96-4c57-b12b-f1d0db694a2b:
     post:
       tags:
         - Scheduler
@@ -1108,13 +1326,13 @@ paths:
                 type: string
               example: null
         '404':
-          description: Unknown Guid/Task
+          description: Unknown Server/Task
           content:
             text/plain:
               schema:
                 type: string
               example: null
-  /api/v1/servers/e0ae4902-10ed-481f-aed0-fa1170ec779a/backups:
+  /api/v2/servers/e0ae4902-10ed-481f-aed0-fa1170ec779a/backups:
     get:
       tags:
         - Backups
@@ -1158,7 +1376,7 @@ paths:
                 type: string
               example: null
         '404':
-          description: Unknown Guid
+          description: Unknown Server
           content:
             text/plain:
               schema:
@@ -1167,7 +1385,7 @@ paths:
     post:
       tags:
         - Backups
-      summary: Create Backup
+      summary: Create backup
       description: |-
         Create a new backup.
 
@@ -1230,13 +1448,13 @@ paths:
                 type: string
               example: null
         '404':
-          description: Unknown Guid
+          description: Unknown Server
           content:
             text/plain:
               schema:
                 type: string
               example: null
-  /api/v1/servers/e0ae4902-10ed-481f-aed0-fa1170ec779a/backups/449911ca-ff50-4052-8cf3-336b067cd482:
+  /api/v2/servers/e0ae4902-10ed-481f-aed0-fa1170ec779a/backups/449911ca-ff50-4052-8cf3-336b067cd482:
     get:
       tags:
         - Backups
@@ -1290,7 +1508,7 @@ paths:
                 type: string
               example: null
         '404':
-          description: Unknown Guid
+          description: Unknown Server/Backup
           content:
             text/plain:
               schema:
@@ -1353,7 +1571,7 @@ paths:
                 type: string
               example: null
         '404':
-          description: Unknown Guid/Backup
+          description: Unknown Server/Backup
           content:
             text/plain:
               schema:
@@ -1387,7 +1605,7 @@ paths:
                 type: string
               example: null
         '404':
-          description: Unknown Backup
+          description: Unknown Server/Backup
           content:
             text/plain:
               schema:
@@ -1423,7 +1641,361 @@ paths:
                 type: string
               example: null
         '404':
-          description: Unknown Guid/Backup
+          description: Unknown Server/Backup
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+  /api/v2/users:
+    get:
+      tags:
+        - Users
+      summary: Get list of users
+      description: |-
+        Return all users from a specific server.  
+        (API Key must have admin rights)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                - userId: 7f8f6b1b-4c8a-4de8-a481-0833908d1c20
+                  username: admin
+                  enabled: true
+                  isAdmin: true
+                  hasAccessToAllServers: true
+                  customServerPermissions: {}
+                  createdAt: '2022-07-04T18:18:22.9365915Z'
+                  lastModifiedAt: '2022-12-19T20:50:55.53183Z'
+                - userId: fba6ab9d-9c19-4d0c-8d0d-3d27adc832e1
+                  username: tt
+                  enabled: true
+                  isAdmin: false
+                  hasAccessToAllServers: false
+                  customServerPermissions:
+                    69361e31-2ac8-43b5-9377-0cb5e40e75ac:
+                      viewStats: false
+                      viewConsole: false
+                      useConsole: false
+                      useServerActions: false
+                    ea43121b-2fde-4ede-a6f5-17c46c26af1c:
+                      viewStats: true
+                      viewConsole: true
+                      useConsole: true
+                      useServerActions: true
+                    e0ae4902-10ed-481f-aed0-fa1170ec779a:
+                      viewStats: true
+                      viewConsole: true
+                      useConsole: true
+                      useServerActions: true
+                    3054aac3-dbf5-4e10-94d2-f4b83577d9b4:
+                      viewStats: true
+                      viewConsole: true
+                      useConsole: true
+                      useServerActions: true
+                  createdAt: '2023-01-05T20:47:51.83954Z'
+                  lastModifiedAt: '2023-01-05T20:48:10.4188293Z'
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+        '403':
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+    post:
+      tags:
+        - Users
+      summary: Create User
+      description: |-
+        Create a new user.  
+        (API Key must have admin rights)
+
+        **user (required)**  
+        \- username (required) : string  
+        \- password (required) : string  
+        \- passwordRepeat (required) : boolean  
+        \- enabled (optional) : boolean  
+        \- isAdmin (optional) : boolean  
+        \- hasAccessToAllServers (optional): boolean  
+        \- customServerPermissions (optional) : object\[\]
+
+        ### CustomServerPermissions Object
+
+        userId (required) : string {  
+        viewStats (required) : boolean,  
+        viewConsole (required) : boolean,  
+        useConsole (required) : boolean,  
+        useServerActions (required) : boolean  
+        }
+
+        **example**
+
+        _"3054aac3-dbf5-4e10-94d2-f4b83577d9b4": {  
+        "viewStats": true,  
+        "viewConsole": true,  
+        "useConsole": true,  
+        "useServerActions": true  
+        }_
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                username: testMadeWithApi
+                password: plaintext
+                passwordRepeat: plaintext
+                enabled: true
+                isAdmin: false
+                hasAccessToAllServers: true
+                customServerPermissions: null
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                userId: b04431ae-692e-496e-8228-d1e912843c7e
+                username: testMadeWithApi
+                createdAt: '2023-01-31T18:54:01.4134208Z'
+        '400':
+          description: Invalid User
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+        '403':
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+  /api/v2/users/b04431ae-692e-496e-8228-d1e912843c7e:
+    get:
+      tags:
+        - Users
+      summary: Get list of user details
+      description: |-
+        Return a specific user.  
+        (API Key must have admin rights)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                userId: 5b488091-625e-4403-8cec-94db3b3cc141
+                username: test
+                enabled: true
+                isAdmin: false
+                hasAccessToAllServers: true
+                customServerPermissions:
+                  3054aac3-dbf5-4e10-94d2-f4b83577d9b4:
+                    viewStats: true
+                    viewConsole: true
+                    useConsole: true
+                    useServerActions: true
+                  dc14869d-8494-4b10-96e0-df3264198999:
+                    viewStats: false
+                    viewConsole: true
+                    useConsole: false
+                    useServerActions: false
+                createdAt: '2022-08-01T13:07:13.0167083Z'
+                lastModifiedAt: '2023-01-26T13:01:33.6984964Z'
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+        '403':
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+        '404':
+          description: Unknown User
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+    put:
+      tags:
+        - Users
+      summary: Edit user
+      description: |-
+        Update a specific user.  
+        (API Key must have admin rights)
+
+        **user (required)**  
+        \- password (optional) : string  
+        \- passwordRepeat (optional) : boolean  
+        \- enabled (optional) : boolean  
+        \- isAdmin (optional) : boolean  
+        \- hasAccessToAllServers (optional): boolean  
+        \- customServerPermissions (optional) : object\[\]
+
+        ### CustomServerPermissions Object
+
+        userId (required) : string {  
+        viewStats (required) : boolean,  
+        viewConsole (required) : boolean,  
+        useConsole (required) : boolean,  
+        useServerActions (required) : boolean  
+        }
+
+        **example**
+
+        _"3054aac3-dbf5-4e10-94d2-f4b83577d9b4": {  
+        "viewStats": true,  
+        "viewConsole": true,  
+        "useConsole": true,  
+        "useServerActions": true  
+        }_
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                password: aOfnfydBSBR8%ZgIfy%he$pvm
+                passwordRepeat: aOfnfydBSBR8%ZgIfy%he$pvm
+                hasAccessToAllServers: true
+                customServerPermissions: null
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              example: {}
+        '400':
+          description: Invalid User
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+        '403':
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+        '404':
+          description: Unknown User
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+    delete:
+      tags:
+        - Users
+      summary: Delete user
+      description: |-
+        Delete a specific server user, any active sessions are also removed.  
+        (API Key must have admin rights)
+      responses:
+        '200':
+          description: Deleted
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+        '403':
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+        '404':
+          description: Unknown User
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+  /api/v2/users/wipe/sessions:
+    post:
+      tags:
+        - Users
+      summary: Wipe all sessions
+      description: |-
+        Wipes any panel sessions, meaning all users need to relogin.  
+        (API Key must have admin rights)
+      requestBody:
+        content: {}
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+        '403':
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+        '500':
+          description: Failed to wipe sessions
           content:
             text/plain:
               schema:
