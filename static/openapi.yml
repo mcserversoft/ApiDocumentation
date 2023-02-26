@@ -1717,36 +1717,51 @@ paths:
       tags:
         - Users
       summary: Create User
-      description: |-
+      description: >-
         Create a new user.  
+
         (API Key must have admin rights)
 
+
         **user (required)**  
+
         \- username (required) : string  
+
         \- password (required) : string  
+
         \- passwordRepeat (required) : string  
+
         \- enabled (optional) : boolean  
+
         \- isAdmin (optional) : boolean  
+
         \- hasAccessToAllServers (optional): boolean  
+
         \- customServerPermissions (optional) : object\[\]
+
 
         ### CustomServerPermissions Object
 
-        userId (required) : string {  
+
+        serverId (required) : string {  
+
         viewStats (required) : boolean,  
+
         viewConsole (required) : boolean,  
+
         useConsole (required) : boolean,  
+
         useServerActions (required) : boolean  
+
         }
+
 
         **example**
 
-        _"3054aac3-dbf5-4e10-94d2-f4b83577d9b4": {  
-        "viewStats": true,  
-        "viewConsole": true,  
-        "useConsole": true,  
-        "useServerActions": true  
-        }_
+
+        _"3054aac3-dbf5-4e10-94d2-f4b83577d9b4": {__"viewStats":
+        true,__"viewConsole": true,__"useConsole": true,__"useServerActions":
+        true__}_
       requestBody:
         content:
           application/json:
@@ -1792,11 +1807,11 @@ paths:
               schema:
                 type: string
               example: null
-  /api/v2/users/b04431ae-692e-496e-8228-d1e912843c7e:
+  /api/v2/users/5b488091-625e-4403-8cec-94db3b3cc141:
     get:
       tags:
         - Users
-      summary: Get list of user details
+      summary: Get user details
       description: |-
         Return a specific user.  
         (API Key must have admin rights)
@@ -1847,6 +1862,7 @@ paths:
               schema:
                 type: string
               example: null
+  /api/v2/users/b04431ae-692e-496e-8228-d1e912843c7e:
     put:
       tags:
         - Users
@@ -1865,7 +1881,7 @@ paths:
 
         ### CustomServerPermissions Object
 
-        userId (required) : string {  
+        serverId (required) : string {  
         viewStats (required) : boolean,  
         viewConsole (required) : boolean,  
         useConsole (required) : boolean,  
