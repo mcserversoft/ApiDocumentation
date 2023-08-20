@@ -1,12 +1,11 @@
-// @ts-check
-// Note: type annotations allow type checking and IDEs autocompletion
-
 // @ts-ignore
 const lightCodeTheme = require('prism-react-renderer').themes.github;
 // @ts-ignore
 const darkCodeTheme = require('prism-react-renderer').themes.dracula;
-// see https://github.com/facebook/docusaurus/issues/8940#issuecomment-1532573496
+//https://github.com/facebook/docusaurus/issues/8940#issuecomment-1532573496
 
+// @ts-check
+// Note: type annotations allow type checking and IDEs autocompletion
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'MC Server Soft API Documentation',
