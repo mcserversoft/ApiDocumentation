@@ -20,7 +20,7 @@ info:
         
 
     `Enabling SSL is recommended even when the certificate is self signed!`
-  version: API_2.0.0
+  version: API_2.2.0
 servers:
   - url: https://localhost:25560
     description: Your local MCSS API server
@@ -217,8 +217,8 @@ paths:
         - name: filter
           in: query
           schema:
-            type: string
-          example: Online
+            type: integer
+          example: '3'
         - name: serverTypeId
           in: query
           schema:
