@@ -4,7 +4,7 @@ info:
   description: >-
     Documentation for the official MC Server Soft API.  
 
-    This for MCSS v13.5.0 and higher.
+    This for MCSS v13.7.0 and higher.
 
 
     Other versions:
@@ -20,7 +20,7 @@ info:
         
 
     `Enabling SSL is recommended even when the certificate is self signed!`
-  version: API_2.2.0
+  version: API_2.3.0
 servers:
   - url: https://localhost:25560
     description: Your local MCSS API server
@@ -50,6 +50,7 @@ tags:
     description: |-
       API calls that involve the web panel users.  
       (API Key must have admin rights)
+  - name: Mcss
 paths:
   /api/v2:
     get:
@@ -904,12 +905,14 @@ paths:
           in: query
           schema:
             type: string
-          example: "[19:25:31] [Server thread/INFO]: Closing Thread Pool"
+          example: >-
+            %5B19%3A25%3A31%5D%20%5BServer%20thread%2FINFO%5D%3A%20Closing%20Thread%20Pool
         - name: lastLine
           in: query
           schema:
             type: string
-          example: "[19:25:31] [Server thread/INFO]: Closing Server"
+          example: >-
+            %5B19%3A25%3A31%5D%20%5BServer%20thread%2FINFO%5D%3A%20Closing%20Server
       responses:
         "200":
           description: OK
@@ -1486,6 +1489,45 @@ paths:
               schema:
                 type: string
               example: null
+  /api/v2/servers/e0ae4902-10ed-481f-aed0-fa1170ec779a/backups/stats:
+    get:
+      tags:
+        - Backups
+      summary: Get list of backups stats
+      description: Return all backup stats from a specific server
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                scheduled: 1
+                completed: 5
+                canceled: 3
+                failed: 7
+        "401":
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+        "403":
+          description: No Server Access
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+        "404":
+          description: Unknown Server
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
   ? /api/v2/servers/e0ae4902-10ed-481f-aed0-fa1170ec779a/backups/449911ca-ff50-4052-8cf3-336b067cd482
   : get:
       tags:
@@ -1679,6 +1721,90 @@ paths:
               schema:
                 type: string
               example: null
+  /api/v2/servers/e0ae4902-10ed-481f-aed0-fa1170ec779a/backups/history:
+    get:
+      tags:
+        - Backups
+      summary: Get backup history
+      description: Return the last 15 backup history from a specific server
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                - name: Test Backup
+                  destination: >-
+                    C:\Users\User\Desktop\mcss\backups\Backup of Server
+                    Pool_Test Backup 1666547683.zip
+                  lastRun: "2022-10-23T19:54:51.4501132+02:00"
+                  status: 2
+                  logMessage: ""
+                - name: Backup plugins
+                  destination: \1/22_1652974456.zip
+                  lastRun: "2022-05-19T17:34:16.9474623+02:00"
+                  status: 3
+                  logMessage: Something went wrong.
+        "401":
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+        "403":
+          description: No Server Access
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+        "404":
+          description: Unknown Server
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+  /api/v2/servers/e0ae4902-10ed-481f-aed0-fa1170ec779a/backups/history/clear:
+    post:
+      tags:
+        - Backups
+      summary: Clear backup history
+      description: Clear the backup history for a specific server
+      requestBody:
+        content: {}
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              example: {}
+        "401":
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+        "403":
+          description: No Server Access
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+        "404":
+          description: Unknown Server
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
   /api/v2/users:
     get:
       tags:
@@ -1714,21 +1840,45 @@ paths:
                       viewConsole: false
                       useConsole: false
                       useServerActions: false
+                      editServer: false
+                      viewBackups: false
+                      createBackup: false
+                      editBackup: false
+                      deleteBackups: false
+                      triggerBackup: false
                     ea43121b-2fde-4ede-a6f5-17c46c26af1c:
                       viewStats: true
                       viewConsole: true
                       useConsole: true
                       useServerActions: true
+                      editServer: false
+                      viewBackups: false
+                      createBackup: false
+                      editBackup: false
+                      deleteBackups: false
+                      triggerBackup: false
                     e0ae4902-10ed-481f-aed0-fa1170ec779a:
                       viewStats: true
                       viewConsole: true
                       useConsole: true
                       useServerActions: true
+                      editServer: false
+                      viewBackups: false
+                      createBackup: false
+                      editBackup: false
+                      deleteBackups: false
+                      triggerBackup: false
                     3054aac3-dbf5-4e10-94d2-f4b83577d9b4:
                       viewStats: true
                       viewConsole: true
                       useConsole: true
                       useServerActions: true
+                      editServer: false
+                      viewBackups: false
+                      createBackup: false
+                      editBackup: false
+                      deleteBackups: false
+                      triggerBackup: false
                   createdAt: "2023-01-05T20:47:51.83954Z"
                   lastModifiedAt: "2023-01-05T20:48:10.4188293Z"
         "401":
@@ -1783,7 +1933,13 @@ paths:
 
         useConsole (required) : boolean,  
 
-        useServerActions (required) : boolean  
+        useServerActions (required) : boolean,  
+        editServer(required) : boolean,  
+        viewBackups(required) : boolean,  
+        createBackup(required) : boolean,  
+        editBackup(required) : boolean,  
+        deleteBackups(required) : boolean,  
+        triggerBackup(required) : boolean  
 
         }
 
@@ -1791,9 +1947,9 @@ paths:
         **example**
 
 
-        _"3054aac3-dbf5-4e10-94d2-f4b83577d9b4": {__"viewStats":
-        true,__"viewConsole": true,__"useConsole": true,__"useServerActions":
-        true__}_
+        _"3054aac3-dbf5-4e10-94d2-f4b83577d9b4": {__**"viewStats":
+        true,**__"viewConsole": true,__**"useConsole":
+        true,**__"useServerActions": true__}_
       requestBody:
         content:
           application/json:
@@ -1866,11 +2022,23 @@ paths:
                     viewConsole: true
                     useConsole: true
                     useServerActions: true
+                    editServer: false
+                    viewBackups: false
+                    createBackup: false
+                    editBackup: false
+                    deleteBackups: false
+                    triggerBackup: false
                   dc14869d-8494-4b10-96e0-df3264198999:
                     viewStats: false
                     viewConsole: true
                     useConsole: false
                     useServerActions: false
+                    editServer: false
+                    viewBackups: false
+                    createBackup: false
+                    editBackup: false
+                    deleteBackups: false
+                    triggerBackup: false
                 createdAt: "2022-08-01T13:07:13.0167083Z"
                 lastModifiedAt: "2023-01-26T13:01:33.6984964Z"
         "401":
@@ -1899,8 +2067,9 @@ paths:
       tags:
         - Users
       summary: Edit user
-      description: |-
+      description: >-
         Update a specific user.  
+
         (API Key must have admin rights)
 
         **user (required)**  
@@ -1917,17 +2086,22 @@ paths:
         viewStats (required) : boolean,  
         viewConsole (required) : boolean,  
         useConsole (required) : boolean,  
-        useServerActions (required) : boolean  
+        useServerActions (required) : boolean,  
+        editServer(required) : boolean,  
+        viewBackups(required) : boolean,  
+        createBackup(required) : boolean,  
+        editBackup(required) : boolean,  
+        deleteBackups(required) : boolean,  
+        triggerBackup(required) : boolean  
         }
+
 
         **example**
 
-        _"3054aac3-dbf5-4e10-94d2-f4b83577d9b4": {  
-        "viewStats": true,  
-        "viewConsole": true,  
-        "useConsole": true,  
-        "useServerActions": true  
-        }_
+
+        _"3054aac3-dbf5-4e10-94d2-f4b83577d9b4": {__**"viewStats":
+        true,**__"viewConsole": true,__**"useConsole":
+        true,**__"useServerActions": true__}_
       requestBody:
         content:
           application/json:
@@ -2044,6 +2218,76 @@ paths:
               example: null
         "500":
           description: Failed to wipe sessions
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+  /api/v2/mcss/settings/All:
+    get:
+      tags:
+        - Mcss
+      summary: Get settings
+      description: |-
+        Get mcss settings.
+
+        URL parameters:  
+        \- All  
+        \- Backups
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                deleteOldBackupsThreshold: 7
+                previousBackupLocation: P:\path\to\backups\name
+        "400":
+          description: Invalid Section
+          content:
+            application/json:
+              schema:
+                type: object
+              example: {}
+        "401":
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+  /api/v2/mcss/settings:
+    patch:
+      tags:
+        - Mcss
+      summary: Update settings
+      description: Update mcss settings.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                deleteOldBackupsThreshold: 11
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              example: {}
+        "204":
+          description: Nothing Changed
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+        "401":
+          description: Unauthorized
           content:
             text/plain:
               schema:
