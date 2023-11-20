@@ -906,10 +906,14 @@ paths:
           in: query
           schema:
             type: string
+          example: >-
+            %5B19%3A25%3A31%5D%20%5BServer%20thread%2FINFO%5D%3A%20Closing%20Thread%20Pool
         - name: lastLine
           in: query
           schema:
             type: string
+          example: >-
+            %5B19%3A25%3A31%5D%20%5BServer%20thread%2FINFO%5D%3A%20Closing%20Server
       responses:
         "200":
           description: OK
@@ -1487,6 +1491,7 @@ paths:
                 type: string
               example: null
   /api/v2/servers/e0ae4902-10ed-481f-aed0-fa1170ec779a/backups/stats:
+    get:
       tags:
         - Backups
       summary: Get list of backups stats
@@ -1943,6 +1948,9 @@ paths:
         **example**
 
 
+        _"3054aac3-dbf5-4e10-94d2-f4b83577d9b4": {__**"viewStats":
+        true,**__"viewConsole": true,__**"useConsole":
+        true,**__"useServerActions": true__}_
       requestBody:
         content:
           application/json:
@@ -2091,6 +2099,10 @@ paths:
 
         **example**
 
+
+        _"3054aac3-dbf5-4e10-94d2-f4b83577d9b4": {__**"viewStats":
+        true,**__"viewConsole": true,__**"useConsole":
+        true,**__"useServerActions": true__}_
       requestBody:
         content:
           application/json:
